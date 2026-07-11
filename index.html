@@ -120,7 +120,7 @@ const MILESTONES=[
   {key:"企画初稿",short:"企画初稿",bucket:"planning"},
   {key:"長門相談",short:"長門相談",bucket:"planning"},
   {key:"演者相談",short:"演者相談",bucket:"planning"},
-  {key:"企画修正",short:"企画修正",bucket:"planning"},
+  {key:"企画修正",short:"企画修正",bucket:"planning",alt:["企画調整"]},
   {key:"企画決定",short:"企画決定",bucket:"planning"},
   {key:"コンテ完了",short:"コンテ",bucket:"shootprep"},
   {key:"下見機材",short:"下見・機材",bucket:"shootprep"},
@@ -200,6 +200,7 @@ function gridToShoots(grid){
   };
   const msCol=MILESTONES.map(m=>{
     let i=find(h=>h===m.key);
+    if(i<0&&m.alt){for(const a of m.alt){i=find(h=>h===a);if(i>=0)break;}}
     if(i<0&&m.contains)i=find(h=>h.includes(m.contains));
     return i;
   });
@@ -227,15 +228,17 @@ function load(){
   window[cb]=function(resp){
     if(done)return; done=true; cleanup();
     try{
-      const rows=(resp&&resp.table&&resp.table.rows)?resp.table.rows:[];
-      const g=rows.map(r=>(r.c||[]).map(cellVal));
+      const tbl=resp&&resp.table?resp.table:{};
+      const labels=(tbl.cols||[]).map(c=>(c&&c.label!=null)?String(c.label):"");
+      const dataG=(tbl.rows||[]).map(r=>(r.c||[]).map(cellVal));
+      const g=[labels, ...dataG]; // 見出し行はcolsのラベルから（日付列も名称が保持される）
       const parsed=gridToShoots(g);
       if(!parsed.length)throw new Error("データが空です");
       SHOOTS=parsed; renderSummary(); render();
     }catch(e){ showErr((e&&e.message)||e); }
   };
   const s=document.createElement("script");
-  s.src=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${cb}&headers=0&_=${Date.now()}`;
+  s.src=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${cb}&_=${Date.now()}`;
   s.onerror=()=>{ if(!done){done=true;cleanup();showErr("Failed to load (共有設定をご確認ください)");} };
   document.head.appendChild(s);
 }
