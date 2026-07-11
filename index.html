@@ -8,7 +8,7 @@
   :root{
     --bg:#f4f5f7; --card:#ffffff; --ink:#1f2430; --muted:#7b8394;
     --line:#e4e7ec; --accent:#4c6ef5; --accent-soft:#eef2ff;
-    --planning:#f59e0b; --shootprep:#ef4444; --editing:#3b82f6; --done:#10b981;
+    --planning:#f59e0b; --shootprep:#ef4444; --editing:#3b82f6; --done:#10b981; --late:#dc2626;
     --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.04);
   }
   *{box-sizing:border-box}
@@ -29,6 +29,7 @@
     border-radius:999px;padding:6px 13px;font-size:12.5px;box-shadow:var(--shadow);cursor:pointer;user-select:none;}
   .chip .dot{width:9px;height:9px;border-radius:50%;} .chip .n{font-weight:700;}
   .chip.active{border-color:var(--accent);background:var(--accent-soft);}
+  .chip.warn{border-color:var(--late);color:var(--late);} .chip.warn.active{background:#fee2e2;}
   .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px;
     background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow);}
   .controls input[type=search]{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;background:#fff;color:var(--ink);flex:1;min-width:160px;}
@@ -45,6 +46,7 @@
   .card:hover{box-shadow:0 6px 16px rgba(16,24,40,.10);}
   .c-left{flex:0 0 120px;padding:12px 11px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px;}
   .status-badge{align-self:flex-start;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;color:#fff;white-space:nowrap;}
+  .delay-badge{align-self:flex-start;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff;background:var(--late);white-space:nowrap;}
   .c-left .no{font-size:11px;color:var(--muted);font-weight:600;}
   .c-left .date{font-size:13px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;}
   .c-left .time{font-size:11px;color:var(--muted);}
@@ -53,7 +55,6 @@
   .c-main .meta{font-size:11px;color:var(--muted);line-height:1.4;}
   .c-main .meta b{color:var(--ink);font-weight:600;}
   .c-main .note{font-size:10.5px;color:var(--muted);margin-top:5px;line-height:1.4;}
-  /* 13ステップ・タイムライン（主役として拡大） */
   .c-timeline{flex:1 1 720px;padding:24px 18px 16px;border-left:1px solid var(--line);display:flex;align-items:flex-start;}
   .step{flex:1 1 0;text-align:center;position:relative;padding-top:28px;min-width:0;}
   .step .mk{position:absolute;top:0;left:50%;transform:translateX(-50%);width:18px;height:18px;border-radius:50%;
@@ -63,12 +64,15 @@
   .step.done .mk{background:var(--done);border-color:var(--done);}
   .step.done::before{background:var(--done);}
   .step.current .mk{border-color:var(--accent);box-shadow:0 0 0 5px var(--accent-soft);}
+  .step.overdue .mk{border-color:var(--late);background:#fff;box-shadow:0 0 0 4px #fee2e2;}
   .step .lbl{font-size:11px;color:var(--muted);line-height:1.25;padding:0 2px;}
   .step.done .lbl,.step.current .lbl{color:var(--ink);}
   .step.current .lbl{color:var(--accent);font-weight:700;}
+  .step.overdue .lbl{color:var(--late);font-weight:700;}
   .step .dt{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:2px;}
+  .step.overdue .dt{color:var(--late);}
   .c-cd{flex:0 0 132px;padding:12px 13px;border-left:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;text-align:right;}
-  .countdown{font-weight:700;color:var(--ink);font-size:12.5px;}
+  .countdown{font-weight:700;color:var(--ink);font-size:12.5px;} .countdown.late{color:var(--late);}
   .empty,.loading,.errbox{width:100%;text-align:center;color:var(--muted);padding:50px 0;}
   .errbox{color:#b42318;line-height:1.7;}
   .spin{display:inline-block;width:22px;height:22px;border:3px solid var(--line);border-top-color:var(--accent);
@@ -93,7 +97,7 @@
       <a class="btn" id="editlink" target="_blank">✎ スプレッドを編集</a>
     </div>
   </header>
-  <div class="sub">各マイルストーンの日付はスプレッドの列（見出し名で照合）を手入力。ステータスは「今日までに過ぎた一番先の項目」で自動判定。反映は「最新に更新」で。</div>
+  <div class="sub">「完了した工程」列で実績を管理し、予定日を過ぎても未完了の工程がある撮影を<b style="color:var(--late)">遅れ</b>として表示します。反映は「最新に更新」で。</div>
   <div class="summary" id="summary"></div>
   <div class="controls">
     <input type="search" id="q" placeholder="🔍 企画・場所で検索…">
@@ -150,39 +154,48 @@ function parseAnyDate(s,ref){
 function fmt(d){return d?(d.getMonth()+1)+"/"+d.getDate()+"("+"日月火水木金土"[d.getDay()]+")":"—";}
 function shortDate(d){return d?(d.getMonth()+1)+"/"+d.getDate():"—";}
 function daysBetween(a,b){return Math.round((a-b)/86400000);}
+function completedIndex(v){
+  v=(v||"").trim(); if(!v||v==="なし"||v==="未着手"||v==="ー"||v==="-")return -1;
+  for(let i=0;i<MILESTONES.length;i++){const m=MILESTONES[i];
+    if(v===m.key||v===m.short)return i;
+    if(m.alt&&m.alt.indexOf(v)>=0)return i;}
+  for(let i=0;i<MILESTONES.length;i++){if(v.indexOf(MILESTONES[i].key)>=0||MILESTONES[i].key.indexOf(v)>=0)return i;}
+  return -1;
+}
 function shootInfo(s){
   const ref=parseAnyDate(s.dates["撮影"]||"",null)||today;
   const md=MILESTONES.map(m=>parseAnyDate(s.dates[m.key]||"",ref));
-  let reached=-1; md.forEach((d,i)=>{ if(d&&d<=today)reached=i; });
-  const phase = reached<0 ? "planning" : MILESTONES[reached].bucket;
-  return {md,reached,phase,shootD:parseAnyDate(s.dates["撮影"]||"",ref)};
+  const done=completedIndex(s.completed);
+  const phase = done<0 ? "planning" : MILESTONES[done].bucket;
+  const overdue=[]; for(let i=done+1;i<MILESTONES.length;i++){ if(md[i]&&md[i]<today)overdue.push(i); }
+  const firstOverdue = overdue.length? overdue[0] : -1;
+  return {md,done,phase,overdue,firstOverdue,delayed:overdue.length>0,shootD:parseAnyDate(s.dates["撮影"]||"",ref)};
 }
 function timelineHTML(info){
+  const ov=new Set(info.overdue);
   return MILESTONES.map((m,i)=>{
     let cls="future";
-    if(info.md[i]&&info.md[i]<=today)cls="done";
-    if(i===info.reached+1)cls="current";
+    if(i<=info.done)cls="done";
+    else if(ov.has(i))cls="overdue";
+    else if(i===info.done+1)cls="current";
     return `<div class="step ${cls}" title="${m.key}"><span class="mk"></span>
       <div class="lbl">${m.short}</div><div class="dt">${shortDate(info.md[i])}</div></div>`;
   }).join("");
 }
 function countdownText(info){
-  if(info.phase==="done")return"完了（UP済み）";
-  const nextIdx=info.reached+1;
-  if(nextIdx>MILESTONES.length-1)return"完了";
-  const m=MILESTONES[nextIdx]; const d=info.md[nextIdx];
-  if(!d)return`次は「${m.short}」<br>日付未入力`;
+  if(info.delayed){const i=info.firstOverdue;const dd=daysBetween(today,info.md[i]);
+    return {late:true, html:`⚠ ${MILESTONES[i].short}<br>${dd}日 遅れ`};}
+  if(info.done>=MILESTONES.length-1)return {late:false, html:"完了（UP済み）"};
+  const nextIdx=info.done+1; const m=MILESTONES[nextIdx]; const d=info.md[nextIdx];
+  if(!d)return {late:false, html:`次は「${m.short}」<br>日付未入力`};
   const dd=daysBetween(d,today);
-  if(dd===0)return`本日：${m.short}`;
-  if(dd<0)return`${m.short} を<br>${-dd}日超過`;
-  return`${m.short}まで<br>あと${dd}日`;
+  if(dd===0)return {late:false, html:`本日：${m.short}`};
+  return {late:false, html:`${m.short}まで<br>あと${dd}日`};
 }
-/* gvizセル→文字列（表示値f優先） */
 function cellVal(c){ if(!c)return""; if(c.f!=null)return String(c.f);
   let v=c.v; if(v==null)return"";
   if(typeof v==="string"){const m=v.match(/^Date\((\d+),(\d+),(\d+)/);if(m)return m[1]+"-"+(+m[2]+1)+"-"+m[3];}
   return String(v); }
-/* 2次元配列 → 撮影オブジェクト。見出し行を内容で特定し列を名前照合 */
 function gridToShoots(grid){
   if(!grid.length)return[];
   let hIdx=grid.findIndex(r=>r.some(c=>c.includes("テーマ"))||r.some(c=>c.trim()==="No."));
@@ -196,7 +209,8 @@ function gridToShoots(grid){
     place:find(h=>h==="場所"),
     time:find(h=>h==="時間"),
     len:find(h=>h.includes("尺")),
-    note:find(h=>h==="備考")
+    note:find(h=>h==="備考"),
+    completed:find(h=>h==="完了した工程"||h==="完了工程"||h==="現在の工程"||h.indexOf("完了した")>=0)
   };
   const msCol=MILESTONES.map(m=>{
     let i=find(h=>h===m.key);
@@ -210,12 +224,12 @@ function gridToShoots(grid){
     return {
       no:g(r,col.no),theme:g(r,col.theme),
       performers:g(r,col.perf).split("・").map(x=>x.trim()).filter(Boolean),
-      place:g(r,col.place),time:g(r,col.time),len:g(r,col.len),note:g(r,col.note),dates
+      place:g(r,col.place),time:g(r,col.time),len:g(r,col.len),note:g(r,col.note),
+      completed:g(r,col.completed),dates
     };
   }).filter(s=>s.theme && s.theme!=="企画／テーマ");
 }
 let SHOOTS=[],activeFilter=null,sortMode="status";
-/* CORSを避けるため gviz JSONP（scriptタグ）で読み込む */
 function load(){
   const grid=document.getElementById("grid");
   grid.innerHTML=`<div class="loading"><span class="spin"></span>スプレッドを読み込み中…</div>`;
@@ -231,7 +245,7 @@ function load(){
       const tbl=resp&&resp.table?resp.table:{};
       const labels=(tbl.cols||[]).map(c=>(c&&c.label!=null)?String(c.label):"");
       const dataG=(tbl.rows||[]).map(r=>(r.c||[]).map(cellVal));
-      const g=[labels, ...dataG]; // 見出し行はcolsのラベルから（日付列も名称が保持される）
+      const g=[labels, ...dataG];
       const parsed=gridToShoots(g);
       if(!parsed.length)throw new Error("データが空です");
       SHOOTS=parsed; renderSummary(); render();
@@ -243,31 +257,36 @@ function load(){
   document.head.appendChild(s);
 }
 function renderSummary(){
-  const c={planning:0,shootprep:0,editing:0,done:0};
-  SHOOTS.forEach(s=>{c[shootInfo(s).phase]++;});
+  const c={planning:0,shootprep:0,editing:0,done:0}; let late=0;
+  SHOOTS.forEach(s=>{const i=shootInfo(s);c[i.phase]++;if(i.delayed)late++;});
   const box=document.getElementById("summary");
-  box.innerHTML=PHASE_ORDER.map(k=>{const P=PHASES[k];
+  let html=`<div class="chip warn ${activeFilter==='delayed'?'active':''}" data-phase="delayed">⚠ 遅れ<span class="n">${late}</span></div>`;
+  html+=PHASE_ORDER.map(k=>{const P=PHASES[k];
     return `<div class="chip ${activeFilter===k?"active":""}" data-phase="${k}">
       <span class="dot" style="background:${P.color}"></span>${P.label}<span class="n">${c[k]}</span></div>`;}).join("");
+  box.innerHTML=html;
   box.querySelectorAll(".chip").forEach(ch=>ch.onclick=()=>{const p=ch.dataset.phase;
     activeFilter=(activeFilter===p)?null:p;renderSummary();render();});
 }
 function cardHTML(r){const{s,info}=r;const P=PHASES[info.phase];
-  return `<div class="card" style="border-left-color:${P.raw}">
+  const border=info.delayed?"var(--late)":P.raw; const cd=countdownText(info);
+  return `<div class="card" style="border-left-color:${border}">
     <div class="c-left"><span class="status-badge" style="background:${P.color}">${P.label}</span>
+      ${info.delayed?'<span class="delay-badge">遅れ</span>':''}
       <div class="no">No.${s.no}</div><div class="date">${fmt(info.shootD)}</div><div class="time">${s.time||""}</div></div>
     <div class="c-main"><h3>${s.theme}</h3>
       <div class="meta"><b>場所</b> ${s.place||"—"}${s.performers.length?` ／ <b>演者</b> ${s.performers.join("・")}`:""}${s.len?` ／ <b>尺</b> ${s.len}`:""}</div>
       ${s.note?`<div class="note">📌 ${s.note}</div>`:""}</div>
     <div class="c-timeline">${timelineHTML(info)}</div>
-    <div class="c-cd"><div class="countdown">${countdownText(info)}</div></div></div>`;
+    <div class="c-cd"><div class="countdown ${cd.late?'late':''}">${cd.html}</div></div></div>`;
 }
 function render(){
   const q=document.getElementById("q").value.trim().toLowerCase();
   const grid=document.getElementById("grid");
   let rows=SHOOTS.map(s=>({s,info:shootInfo(s)}));
   let view=rows.filter(r=>{
-    if(activeFilter&&r.info.phase!==activeFilter)return false;
+    if(activeFilter==="delayed"){ if(!r.info.delayed)return false; }
+    else if(activeFilter&&r.info.phase!==activeFilter)return false;
     if(q){const hay=(r.s.theme+" "+r.s.place+" "+r.s.note+" "+r.s.performers.join(" ")).toLowerCase();if(!hay.includes(q))return false;}
     return true;});
   document.getElementById("count").textContent=view.length+" 件表示";
