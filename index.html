@@ -14,7 +14,7 @@
   *{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP","Segoe UI",sans-serif;
     background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;}
-  .wrap{max-width:1240px;margin:0 auto;padding:24px 20px 60px;}
+  .wrap{max-width:1600px;margin:0 auto;padding:22px 20px 60px;}
   header.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;margin-bottom:4px;}
   header.top h1{font-size:22px;margin:0;font-weight:700;letter-spacing:.02em;}
   .today{color:var(--muted);font-size:13px;}
@@ -22,61 +22,59 @@
   .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 13px;font-size:12.5px;
     cursor:pointer;color:var(--ink);text-decoration:none;font-family:inherit;box-shadow:var(--shadow);}
   .btn:hover{background:var(--accent-soft);border-color:var(--accent);}
-  .sub{color:var(--muted);font-size:12.5px;margin:4px 0 16px;}
+  .sub{color:var(--muted);font-size:12.5px;margin:4px 0 14px;}
   .sub a{color:var(--accent);text-decoration:none;} .sub a:hover{text-decoration:underline;}
-
   .summary{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
   .chip{display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);
     border-radius:999px;padding:6px 13px;font-size:12.5px;box-shadow:var(--shadow);cursor:pointer;user-select:none;}
   .chip .dot{width:9px;height:9px;border-radius:50%;} .chip .n{font-weight:700;}
   .chip.active{border-color:var(--accent);background:var(--accent-soft);}
-  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;
-    background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);}
-  .controls input[type=search]{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;background:#fff;color:var(--ink);flex:1;min-width:180px;}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow);}
+  .controls input[type=search]{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;background:#fff;color:var(--ink);flex:1;min-width:160px;}
   .seg{display:flex;gap:4px;background:#f0f2f5;border-radius:8px;padding:3px;}
   .seg button{border:none;background:transparent;padding:6px 12px;border-radius:6px;font-size:12.5px;cursor:pointer;color:var(--muted);font-family:inherit;}
   .seg button.on{background:#fff;color:var(--ink);box-shadow:var(--shadow);font-weight:600;}
   .count{margin-left:auto;color:var(--muted);font-size:12.5px;}
-
   .board{display:flex;flex-direction:column;gap:10px;}
   .group-h{display:flex;align-items:center;gap:8px;margin:16px 2px 4px;font-size:14px;font-weight:700;color:var(--ink);}
-  .group-h .dot{width:10px;height:10px;border-radius:50%;}
-  .group-h .gn{color:var(--muted);font-weight:600;font-size:12px;}
+  .group-h .dot{width:10px;height:10px;border-radius:50%;} .group-h .gn{color:var(--muted);font-weight:600;font-size:12px;}
   .group-h:first-child{margin-top:2px;}
   .card{display:flex;align-items:stretch;background:var(--card);border:1px solid var(--line);
     border-left:5px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .12s ease;}
   .card:hover{box-shadow:0 6px 16px rgba(16,24,40,.10);}
-  .c-left{flex:0 0 156px;padding:12px 14px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:5px;}
-  .status-badge{align-self:flex-start;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;color:#fff;white-space:nowrap;}
+  .c-left{flex:0 0 120px;padding:12px 11px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px;}
+  .status-badge{align-self:flex-start;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;color:#fff;white-space:nowrap;}
   .c-left .no{font-size:11px;color:var(--muted);font-weight:600;}
-  .c-left .date{font-size:14px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;}
-  .c-left .time{font-size:11.5px;color:var(--muted);}
-  .c-main{flex:1 1 260px;padding:12px 16px;min-width:200px;}
-  .c-main h3{margin:0 0 5px;font-size:15.5px;line-height:1.35;font-weight:700;}
-  .c-main .meta{font-size:12px;color:var(--muted);}
+  .c-left .date{font-size:13px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .c-left .time{font-size:11px;color:var(--muted);}
+  .c-main{flex:0 1 210px;padding:12px 13px;min-width:140px;}
+  .c-main h3{margin:0 0 4px;font-size:14px;line-height:1.3;font-weight:700;}
+  .c-main .meta{font-size:11px;color:var(--muted);line-height:1.4;}
   .c-main .meta b{color:var(--ink);font-weight:600;}
-  .c-main .note{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45;}
-  .c-timeline{flex:0 0 480px;padding:22px 22px 18px;border-left:1px solid var(--line);display:flex;align-items:flex-start;}
-  .step{flex:1 1 0;text-align:center;position:relative;padding-top:30px;min-width:0;}
-  .step .mk{position:absolute;top:0;left:50%;transform:translateX(-50%);width:20px;height:20px;border-radius:50%;
+  .c-main .note{font-size:10.5px;color:var(--muted);margin-top:5px;line-height:1.4;}
+  /* 13ステップ・タイムライン（主役として拡大） */
+  .c-timeline{flex:1 1 720px;padding:24px 18px 16px;border-left:1px solid var(--line);display:flex;align-items:flex-start;}
+  .step{flex:1 1 0;text-align:center;position:relative;padding-top:28px;min-width:0;}
+  .step .mk{position:absolute;top:0;left:50%;transform:translateX(-50%);width:18px;height:18px;border-radius:50%;
     border:3px solid var(--line);background:#fff;z-index:2;}
-  .step::before{content:"";position:absolute;top:9px;left:-50%;width:100%;height:3px;background:var(--line);z-index:1;}
+  .step::before{content:"";position:absolute;top:7.5px;left:-50%;width:100%;height:3px;background:var(--line);z-index:1;}
   .step:first-child::before{display:none;}
   .step.done .mk{background:var(--done);border-color:var(--done);}
   .step.done::before{background:var(--done);}
   .step.current .mk{border-color:var(--accent);box-shadow:0 0 0 5px var(--accent-soft);}
-  .step .lbl{font-size:12.5px;color:var(--muted);line-height:1.3;}
+  .step .lbl{font-size:11px;color:var(--muted);line-height:1.25;padding:0 2px;}
   .step.done .lbl,.step.current .lbl{color:var(--ink);}
   .step.current .lbl{color:var(--accent);font-weight:700;}
-  .step .dt{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:2px;}
-  .c-cd{flex:0 0 170px;padding:12px 16px;border-left:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;text-align:right;}
-  .countdown{font-weight:700;color:var(--ink);font-size:13px;}
+  .step .dt{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:2px;}
+  .c-cd{flex:0 0 132px;padding:12px 13px;border-left:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;text-align:right;}
+  .countdown{font-weight:700;color:var(--ink);font-size:12.5px;}
   .empty,.loading,.errbox{width:100%;text-align:center;color:var(--muted);padding:50px 0;}
   .errbox{color:#b42318;line-height:1.7;}
   .spin{display:inline-block;width:22px;height:22px;border:3px solid var(--line);border-top-color:var(--accent);
     border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:8px;}
   @keyframes sp{to{transform:rotate(360deg)}}
-  @media(max-width:820px){
+  @media(max-width:900px){
     .card{flex-wrap:wrap;}
     .c-left{flex:1 1 100%;border-right:none;border-bottom:1px solid var(--line);flex-direction:row;align-items:center;gap:10px;}
     .c-main{flex:1 1 100%;}
@@ -95,8 +93,7 @@
       <a class="btn" id="editlink" target="_blank">✎ スプレッドを編集</a>
     </div>
   </header>
-  <div class="sub">制作ディレクター向けの進捗確認ビュー。編集開始・編集完了は手入力があればそれを優先します。ステータス順に並び、上のチップで絞り込めます。</div>
-
+  <div class="sub">各マイルストーンの日付はスプレッドの列（見出し名で照合）を手入力。ステータスは「今日までに過ぎた一番先の項目」で自動判定。反映は「最新に更新」で。</div>
   <div class="summary" id="summary"></div>
   <div class="controls">
     <input type="search" id="q" placeholder="🔍 企画・場所で検索…">
@@ -112,15 +109,28 @@
 <script>
 const SHEET_ID = "1jQRfE8cYZOhEg2Firx90GPWn0An6kok_WLc7mMmpO-Y";
 document.getElementById("editlink").href = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
-
-const RULE={prepStart:-9,share:-3,editStart:1,editEnd:30};
-const PHASES={
+const PHASES = {
   planning:{label:"企画中",color:"var(--planning)",raw:"#f59e0b"},
-  shootprep:{label:"撮影企画中",color:"var(--shootprep)",raw:"#ef4444"},
+  shootprep:{label:"撮影準備中",color:"var(--shootprep)",raw:"#ef4444"},
   editing:{label:"編集中",color:"var(--editing)",raw:"#3b82f6"},
   done:{label:"完了",color:"var(--done)",raw:"#10b981"}
 };
 const PHASE_ORDER=["planning","shootprep","editing","done"];
+const MILESTONES=[
+  {key:"企画初稿",short:"企画初稿",bucket:"planning"},
+  {key:"長門相談",short:"長門相談",bucket:"planning"},
+  {key:"演者相談",short:"演者相談",bucket:"planning"},
+  {key:"企画修正",short:"企画修正",bucket:"planning"},
+  {key:"企画決定",short:"企画決定",bucket:"planning"},
+  {key:"コンテ完了",short:"コンテ",bucket:"shootprep"},
+  {key:"下見機材",short:"下見・機材",bucket:"shootprep"},
+  {key:"撮影",short:"撮影",bucket:"shootprep",contains:"撮影"},
+  {key:"素材整理",short:"素材整理",bucket:"editing"},
+  {key:"デザイナー発注",short:"デザ発注",bucket:"editing"},
+  {key:"編集発注",short:"編集発注",bucket:"editing"},
+  {key:"納品",short:"納品",bucket:"editing"},
+  {key:"アップロード",short:"アップロード",bucket:"done"}
+];
 const today=new Date();today.setHours(0,0,0,0);
 document.getElementById("today").textContent="本日 "+today.toLocaleDateString("ja-JP",{year:"numeric",month:"long",day:"numeric",weekday:"short"});
 
@@ -140,55 +150,71 @@ function parseAnyDate(s,ref){
 function fmt(d){return d?(d.getMonth()+1)+"/"+d.getDate()+"("+"日月火水木金土"[d.getDay()]+")":"—";}
 function shortDate(d){return d?(d.getMonth()+1)+"/"+d.getDate():"—";}
 function daysBetween(a,b){return Math.round((a-b)/86400000);}
-function milestones(sd,ov){ov=ov||{};
-  if(!sd)return{shootD:null};
-  return{shootD:sd,
-    prepStart:parseAnyDate(ov.prep,sd)||addDays(sd,RULE.prepStart),
-    share:parseAnyDate(ov.share,sd)||addDays(sd,RULE.share),
-    editStart:parseAnyDate(ov.es,sd)||addDays(sd,RULE.editStart),
-    editEnd:parseAnyDate(ov.ee,sd)||addDays(sd,RULE.editEnd)};
+function shootInfo(s){
+  const ref=parseAnyDate(s.dates["撮影"]||"",null)||today;
+  const md=MILESTONES.map(m=>parseAnyDate(s.dates[m.key]||"",ref));
+  let reached=-1; md.forEach((d,i)=>{ if(d&&d<=today)reached=i; });
+  const phase = reached<0 ? "planning" : MILESTONES[reached].bucket;
+  return {md,reached,phase,shootD:parseAnyDate(s.dates["撮影"]||"",ref)};
 }
-function phaseOf(m){
-  if(!m.shootD)return"planning";
-  if(today<m.prepStart)return"planning";
-  if(today<=m.shootD)return"shootprep";
-  if(today<=m.editEnd)return"editing";
-  return"done";
+function timelineHTML(info){
+  return MILESTONES.map((m,i)=>{
+    let cls="future";
+    if(info.md[i]&&info.md[i]<=today)cls="done";
+    if(i===info.reached+1)cls="current";
+    return `<div class="step ${cls}" title="${m.key}"><span class="mk"></span>
+      <div class="lbl">${m.short}</div><div class="dt">${shortDate(info.md[i])}</div></div>`;
+  }).join("");
 }
-function nextActionDays(m,p){const t={planning:m.prepStart,shootprep:m.shootD,editing:m.editEnd,done:null}[p];
-  return t?daysBetween(t,today):99999;}
-function timelineHTML(m,phase){const order=["prepStart","share","shootD","editStart","editEnd"];
-  const labels={prepStart:"企画準備",share:"演者共有",shootD:"撮影",editStart:"編集開始",editEnd:"編集完了"};
-  let cur; if(phase==="planning")cur="prepStart";else if(phase==="shootprep")cur="shootD";
-  else if(phase==="editing")cur="editEnd";else cur=null;
-  return order.map(k=>{let cls="future";if(m[k]&&today>m[k])cls="done";if(k===cur)cls="current";
-    return `<div class="step ${cls}"><span class="mk"></span>
-      <div class="lbl">${labels[k]}</div><div class="dt">${shortDate(m[k])}</div></div>`;}).join("");}
-function countdownText(m,phase){
-  if(phase==="done")return"編集完了済み";
-  const d=nextActionDays(m,phase);
-  if(phase==="shootprep"){ if(d===0)return"🎬 本日が撮影日"; if(d<0)return"撮影日を"+(-d)+"日経過"; return"撮影まで<br>あと"+d+"日"; }
-  if(phase==="planning"){ if(d<=0)return"まもなく準備期間"; return"撮影準備まで<br>あと"+d+"日"; }
-  if(phase==="editing"){ if(d===0)return"編集完了予定 本日"; if(d<0)return"編集完了予定を<br>"+(-d)+"日超過"; return"編集完了まで<br>あと"+d+"日"; }
-  return"";
+function countdownText(info){
+  if(info.phase==="done")return"完了（UP済み）";
+  const nextIdx=info.reached+1;
+  if(nextIdx>MILESTONES.length-1)return"完了";
+  const m=MILESTONES[nextIdx]; const d=info.md[nextIdx];
+  if(!d)return`次は「${m.short}」<br>日付未入力`;
+  const dd=daysBetween(d,today);
+  if(dd===0)return`本日：${m.short}`;
+  if(dd<0)return`${m.short} を<br>${-dd}日超過`;
+  return`${m.short}まで<br>あと${dd}日`;
 }
-/* gvizセルの値：表示値(f)優先、なければv（"Date(y,m,d)"も変換） */
+/* gvizセル→文字列（表示値f優先） */
 function cellVal(c){ if(!c)return""; if(c.f!=null)return String(c.f);
   let v=c.v; if(v==null)return"";
   if(typeof v==="string"){const m=v.match(/^Date\((\d+),(\d+),(\d+)/);if(m)return m[1]+"-"+(+m[2]+1)+"-"+m[3];}
   return String(v); }
-function rowsToShoots(rows){if(!rows)return[];
-  return rows.map(rw=>{const r=(rw.c||[]).map(cellVal);
-    return {no:(r[0]||"").trim(),theme:(r[1]||"").trim(),
-      performers:(r[2]||"").split("・").map(s=>s.trim()).filter(Boolean),
-      place:(r[3]||"").trim(),date:(r[4]||"").trim(),time:(r[5]||"").trim(),
-      len:(r[6]||"").trim(),note:(r[7]||"").trim(),
-      prep:(r[8]||"").trim(),share:(r[9]||"").trim(),es:(r[10]||"").trim(),ee:(r[11]||"").trim()};})
-    .filter(s=>s.theme && s.theme!=="企画／テーマ");}
-
+/* 2次元配列 → 撮影オブジェクト。見出し行を内容で特定し列を名前照合 */
+function gridToShoots(grid){
+  if(!grid.length)return[];
+  let hIdx=grid.findIndex(r=>r.some(c=>c.includes("テーマ"))||r.some(c=>c.trim()==="No."));
+  if(hIdx<0)hIdx=0;
+  const head=grid[hIdx].map(c=>c.trim());
+  const find=(pred)=>{for(let i=0;i<head.length;i++){if(pred(head[i]))return i;}return -1;};
+  const col={
+    no:find(h=>h==="No."||h==="No"||h==="no"),
+    theme:find(h=>h.includes("テーマ")),
+    perf:find(h=>h==="演者"),
+    place:find(h=>h==="場所"),
+    time:find(h=>h==="時間"),
+    len:find(h=>h.includes("尺")),
+    note:find(h=>h==="備考")
+  };
+  const msCol=MILESTONES.map(m=>{
+    let i=find(h=>h===m.key);
+    if(i<0&&m.contains)i=find(h=>h.includes(m.contains));
+    return i;
+  });
+  const g=(r,i)=>(i>=0&&r[i]!=null)?String(r[i]).trim():"";
+  return grid.slice(hIdx+1).map(r=>{
+    const dates={}; MILESTONES.forEach((m,k)=>{dates[m.key]=g(r,msCol[k]);});
+    return {
+      no:g(r,col.no),theme:g(r,col.theme),
+      performers:g(r,col.perf).split("・").map(x=>x.trim()).filter(Boolean),
+      place:g(r,col.place),time:g(r,col.time),len:g(r,col.len),note:g(r,col.note),dates
+    };
+  }).filter(s=>s.theme && s.theme!=="企画／テーマ");
+}
 let SHOOTS=[],activeFilter=null,sortMode="status";
-
-/* CORSを避けるため gviz JSONP（scriptタグ）で読み込む。ローカル・ホスティングどちらでも動く */
+/* CORSを避けるため gviz JSONP（scriptタグ）で読み込む */
 function load(){
   const grid=document.getElementById("grid");
   grid.innerHTML=`<div class="loading"><span class="spin"></span>スプレッドを読み込み中…</div>`;
@@ -201,21 +227,21 @@ function load(){
   window[cb]=function(resp){
     if(done)return; done=true; cleanup();
     try{
-      const rows=resp&&resp.table&&resp.table.rows?resp.table.rows:[];
-      const parsed=rowsToShoots(rows);
+      const rows=(resp&&resp.table&&resp.table.rows)?resp.table.rows:[];
+      const g=rows.map(r=>(r.c||[]).map(cellVal));
+      const parsed=gridToShoots(g);
       if(!parsed.length)throw new Error("データが空です");
       SHOOTS=parsed; renderSummary(); render();
     }catch(e){ showErr((e&&e.message)||e); }
   };
   const s=document.createElement("script");
-  s.src=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${cb}&_=${Date.now()}`;
+  s.src=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${cb}&headers=0&_=${Date.now()}`;
   s.onerror=()=>{ if(!done){done=true;cleanup();showErr("Failed to load (共有設定をご確認ください)");} };
   document.head.appendChild(s);
 }
-function shootMeta(s){return milestones(parseAnyDate(s.date,today),{prep:s.prep,share:s.share,es:s.es,ee:s.ee});}
 function renderSummary(){
   const c={planning:0,shootprep:0,editing:0,done:0};
-  SHOOTS.forEach(s=>{c[phaseOf(shootMeta(s))]++;});
+  SHOOTS.forEach(s=>{c[shootInfo(s).phase]++;});
   const box=document.getElementById("summary");
   box.innerHTML=PHASE_ORDER.map(k=>{const P=PHASES[k];
     return `<div class="chip ${activeFilter===k?"active":""}" data-phase="${k}">
@@ -223,35 +249,35 @@ function renderSummary(){
   box.querySelectorAll(".chip").forEach(ch=>ch.onclick=()=>{const p=ch.dataset.phase;
     activeFilter=(activeFilter===p)?null:p;renderSummary();render();});
 }
-function cardHTML(r){const{s,m,phase}=r;const P=PHASES[phase];
+function cardHTML(r){const{s,info}=r;const P=PHASES[info.phase];
   return `<div class="card" style="border-left-color:${P.raw}">
     <div class="c-left"><span class="status-badge" style="background:${P.color}">${P.label}</span>
-      <div class="no">No.${s.no}</div><div class="date">${fmt(m.shootD)}</div><div class="time">${s.time||""}</div></div>
+      <div class="no">No.${s.no}</div><div class="date">${fmt(info.shootD)}</div><div class="time">${s.time||""}</div></div>
     <div class="c-main"><h3>${s.theme}</h3>
       <div class="meta"><b>場所</b> ${s.place||"—"}${s.performers.length?` ／ <b>演者</b> ${s.performers.join("・")}`:""}${s.len?` ／ <b>尺</b> ${s.len}`:""}</div>
       ${s.note?`<div class="note">📌 ${s.note}</div>`:""}</div>
-    <div class="c-timeline">${timelineHTML(m,phase)}</div>
-    <div class="c-cd"><div class="countdown">${countdownText(m,phase)}</div></div></div>`;
+    <div class="c-timeline">${timelineHTML(info)}</div>
+    <div class="c-cd"><div class="countdown">${countdownText(info)}</div></div></div>`;
 }
 function render(){
   const q=document.getElementById("q").value.trim().toLowerCase();
   const grid=document.getElementById("grid");
-  let rows=SHOOTS.map(s=>{const m=shootMeta(s);return{s,m,phase:phaseOf(m)};});
+  let rows=SHOOTS.map(s=>({s,info:shootInfo(s)}));
   let view=rows.filter(r=>{
-    if(activeFilter&&r.phase!==activeFilter)return false;
+    if(activeFilter&&r.info.phase!==activeFilter)return false;
     if(q){const hay=(r.s.theme+" "+r.s.place+" "+r.s.note+" "+r.s.performers.join(" ")).toLowerCase();if(!hay.includes(q))return false;}
     return true;});
   document.getElementById("count").textContent=view.length+" 件表示";
   if(!view.length){grid.innerHTML=`<div class="empty">条件に合う撮影がありません。</div>`;return;}
   if(sortMode==="date"){
-    view.sort((a,b)=>(a.m.shootD||0)-(b.m.shootD||0));
+    view.sort((a,b)=>(a.info.shootD||0)-(b.info.shootD||0));
     grid.innerHTML=view.map(cardHTML).join("");
   }else{
-    view.sort((a,b)=>{const ra=PHASE_ORDER.indexOf(a.phase),rb=PHASE_ORDER.indexOf(b.phase);
-      return ra!==rb?ra-rb:(a.m.shootD||0)-(b.m.shootD||0);});
+    view.sort((a,b)=>{const ra=PHASE_ORDER.indexOf(a.info.phase),rb=PHASE_ORDER.indexOf(b.info.phase);
+      return ra!==rb?ra-rb:(a.info.shootD||0)-(b.info.shootD||0);});
     let html="",last=null;
-    view.forEach(r=>{if(r.phase!==last){const P=PHASES[r.phase];const cnt=view.filter(x=>x.phase===r.phase).length;
-      html+=`<div class="group-h"><span class="dot" style="background:${P.color}"></span>${P.label}<span class="gn">${cnt}件</span></div>`;last=r.phase;}
+    view.forEach(r=>{if(r.info.phase!==last){const P=PHASES[r.info.phase];const cnt=view.filter(x=>x.info.phase===r.info.phase).length;
+      html+=`<div class="group-h"><span class="dot" style="background:${P.color}"></span>${P.label}<span class="gn">${cnt}件</span></div>`;last=r.info.phase;}
       html+=cardHTML(r);});
     grid.innerHTML=html;
   }
