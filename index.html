@@ -296,7 +296,9 @@ function render(){
     grid.innerHTML=view.map(cardHTML).join("");
   }else{
     view.sort((a,b)=>{const ra=PHASE_ORDER.indexOf(a.info.phase),rb=PHASE_ORDER.indexOf(b.info.phase);
-      return ra!==rb?ra-rb:(a.info.shootD||0)-(b.info.shootD||0);});
+      if(ra!==rb)return ra-rb;
+      if(a.info.phase==="editing"){const na=parseInt(a.s.no,10),nb=parseInt(b.s.no,10);const va=isNaN(na)?99999:na,vb=isNaN(nb)?99999:nb;if(va!==vb)return va-vb;}
+      return (a.info.shootD||0)-(b.info.shootD||0);});
     let html="",last=null;
     view.forEach(r=>{if(r.info.phase!==last){const P=PHASES[r.info.phase];const cnt=view.filter(x=>x.info.phase===r.info.phase).length;
       html+=`<div class="group-h"><span class="dot" style="background:${P.color}"></span>${P.label}<span class="gn">${cnt}件</span></div>`;last=r.info.phase;}
