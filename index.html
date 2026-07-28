@@ -136,9 +136,10 @@ const MILESTONES=[
   {key:"初稿",short:"初稿",bucket:"editing"},
   {key:"修正指示",short:"修正指示",bucket:"editing"},
   {key:"再稿",short:"再稿",bucket:"editing"},
-  {key:"修正指示2",short:"修正指示",bucket:"editing"},
+  {key:"修正指示2",short:"修正指示",bucket:"editing",alt:["修正指示"]},
   {key:"納品",short:"納品",bucket:"editing"},
-  {key:"アップロード",short:"アップロード",bucket:"done"}
+  {key:"アップロード",short:"アップロード",bucket:"done"},
+  {key:"ショートアップ完了",short:"ショートUP",bucket:"done"}
 ];
 const today=new Date();today.setHours(0,0,0,0);
 document.getElementById("today").textContent="本日 "+today.toLocaleDateString("ja-JP",{year:"numeric",month:"long",day:"numeric",weekday:"short"});
@@ -217,10 +218,13 @@ function gridToShoots(grid){
     note:find(h=>h==="備考"),
     completed:find(h=>h==="完了した工程"||h==="完了工程"||h==="現在の工程"||h.indexOf("完了した")>=0)
   };
+  const usedCols=new Set();
+  const findFree=(pred)=>{for(let i=0;i<head.length;i++){if(!usedCols.has(i)&&pred(head[i]))return i;}return -1;};
   const msCol=MILESTONES.map(m=>{
-    let i=find(h=>h===m.key);
-    if(i<0&&m.alt){for(const a of m.alt){i=find(h=>h===a);if(i>=0)break;}}
-    if(i<0&&m.contains)i=find(h=>h.includes(m.contains));
+    let i=findFree(h=>h===m.key);
+    if(i<0&&m.alt){for(const a of m.alt){i=findFree(h=>h===a);if(i>=0)break;}}
+    if(i<0&&m.contains)i=findFree(h=>h.includes(m.contains));
+    if(i>=0)usedCols.add(i);
     return i;
   });
   const g=(r,i)=>(i>=0&&r[i]!=null)?String(r[i]).trim():"";
