@@ -6,6 +6,7 @@
 <title>撮影進行ダッシュボード｜kaeka</title>
 <style>
   :root{
+    color-scheme: light;
     --bg:#f4f5f7; --card:#ffffff; --ink:#1f2430; --muted:#7b8394;
     --line:#e4e7ec; --accent:#4c6ef5; --accent-soft:#eef2ff;
     --planning:#f59e0b; --shootprep:#ef4444; --editing:#3b82f6; --done:#10b981; --late:#dc2626;
@@ -18,10 +19,10 @@
   header.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;margin-bottom:4px;}
   header.top h1{font-size:22px;margin:0;font-weight:700;letter-spacing:.02em;}
   .today{color:var(--muted);font-size:13px;}
-  .actions{margin-left:auto;display:flex;gap:8px;}
-  .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 13px;font-size:12.5px;
-    cursor:pointer;color:var(--ink);text-decoration:none;font-family:inherit;box-shadow:var(--shadow);}
-  .btn:hover{background:var(--accent-soft);border-color:var(--accent);}
+  .hbtns{display:flex;gap:8px;margin-left:auto;align-items:center;}
+  .hbtn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 13px;font-size:12.5px;
+    cursor:pointer;font-family:inherit;color:var(--ink);text-decoration:none;display:inline-block;box-shadow:var(--shadow);}
+  .hbtn:hover{background:var(--accent-soft);border-color:var(--accent);}
   .sub{color:var(--muted);font-size:12.5px;margin:4px 0 14px;}
   .sub a{color:var(--accent);text-decoration:none;} .sub a:hover{text-decoration:underline;}
   .summary{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
@@ -38,7 +39,7 @@
   .seg button.on{background:#fff;color:var(--ink);box-shadow:var(--shadow);font-weight:600;}
   .count{margin-left:auto;color:var(--muted);font-size:12.5px;}
   .board{display:flex;flex-direction:column;gap:10px;}
-  .group-h{display:flex;align-items:center;gap:8px;margin:16px 2px 4px;font-size:14px;font-weight:700;color:var(--ink);}
+  .group-h{display:flex;align-items:center;gap:8px;margin:14px 2px 2px;font-size:13px;font-weight:700;color:var(--ink);}
   .group-h .dot{width:10px;height:10px;border-radius:50%;} .group-h .gn{color:var(--muted);font-weight:600;font-size:12px;}
   .group-h:first-child{margin-top:2px;}
   .card{display:flex;align-items:stretch;background:var(--card);border:1px solid var(--line);
@@ -72,9 +73,10 @@
   .step .dt{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:2px;}
   .step.overdue .dt{color:var(--late);}
   .c-cd{flex:0 0 132px;padding:12px 13px;border-left:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;text-align:right;}
-  .countdown{font-weight:700;color:var(--ink);font-size:12.5px;} .countdown.late{color:var(--late);}
+  .countdown{font-weight:700;color:var(--ink);font-size:12.5px;}
+  .countdown.late{color:var(--late);}
   .empty,.loading,.errbox{width:100%;text-align:center;color:var(--muted);padding:50px 0;}
-  .errbox{color:#b42318;line-height:1.7;}
+  .errbox{color:#b42318;}
   .spin{display:inline-block;width:22px;height:22px;border:3px solid var(--line);border-top-color:var(--accent);
     border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:8px;}
   @keyframes sp{to{transform:rotate(360deg)}}
@@ -85,6 +87,57 @@
     .c-timeline{flex:1 1 100%;border-left:none;border-top:1px solid var(--line);}
     .c-cd{flex:1 1 100%;border-left:none;border-top:1px solid var(--line);justify-content:flex-start;text-align:left;}
   }
+  /* ===== ビュー切替タブ ===== */
+  .viewtabs{display:inline-flex;gap:4px;background:#e8eaee;border-radius:10px;padding:4px;margin:2px 0 12px;}
+  .viewtabs button{border:none;background:transparent;padding:8px 18px;border-radius:7px;font-size:13.5px;
+    font-family:inherit;cursor:pointer;color:var(--muted);font-weight:600;}
+  .viewtabs button.on{background:#fff;color:var(--ink);box-shadow:var(--shadow);}
+  /* ===== 公開カレンダー ===== */
+  .calbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow);}
+  .calbar .navbtn{border:1px solid var(--line);background:#fff;border-radius:8px;width:32px;height:32px;
+    cursor:pointer;font-size:15px;color:var(--ink);font-family:inherit;line-height:1;}
+  .calbar .navbtn:hover{background:var(--accent-soft);border-color:var(--accent);}
+  .calbar .ym{font-size:16px;font-weight:700;min-width:118px;text-align:center;font-variant-numeric:tabular-nums;}
+  .calbar .tdbtn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;font-size:12.5px;
+    cursor:pointer;font-family:inherit;color:var(--ink);}
+  .calbar .tdbtn:hover{background:var(--accent-soft);border-color:var(--accent);}
+  .calbar .legend{margin-left:auto;display:flex;gap:14px;font-size:12px;color:var(--muted);align-items:center;flex-wrap:wrap;}
+  .calbar .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;}
+  .cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);}
+  .cal .dow{background:#f7f8fa;text-align:center;font-size:11.5px;padding:7px 0;color:var(--muted);font-weight:700;}
+  .cal .dow.sun{color:#dc2626;} .cal .dow.sat{color:#2563eb;}
+  .cal .cell{background:#fff;min-height:96px;padding:5px 6px 7px;}
+  .cal .cell.out{background:#fafbfc;}
+  .cal .cell.today{background:#fffbeb;box-shadow:inset 0 0 0 2px #f59e0b;}
+  .cal .dnum{font-size:11.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .cal .cell.sun .dnum{color:#dc2626;} .cal .cell.sat .dnum{color:#2563eb;}
+  .cal .cell.out .dnum,.cal .cell.out.sun .dnum,.cal .cell.out.sat .dnum{color:#c9ced8;}
+  .pill{display:block;margin-top:3px;font-size:10.5px;line-height:1.35;padding:2px 5px;border-radius:5px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pill.main{background:#eef2ff;color:#3730a3;border-left:3px solid #4c6ef5;}
+  .pill.short{background:#ecfdf5;color:#065f46;border-left:3px solid #10b981;}
+  .pill.pub{opacity:.5;}
+  .callist{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px;box-shadow:var(--shadow);}
+  .callist h4{margin:0 0 8px;font-size:13px;font-weight:700;}
+  .callist table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .callist th,.callist td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);}
+  .callist th{color:var(--muted);font-weight:600;font-size:11.5px;}
+  .callist tr:last-child td{border-bottom:none;}
+  .callist .tag{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:999px;white-space:nowrap;}
+  .callist .tag.main{background:#eef2ff;color:#3730a3;} .callist .tag.short{background:#ecfdf5;color:#065f46;}
+  .callist .st{font-size:11px;color:var(--muted);white-space:nowrap;}
+  .callist .st.pub{color:var(--done);font-weight:700;}
+  .callist .none{color:var(--muted);font-size:12.5px;padding:6px 2px;}
+  .callist .dt{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600;}
+  @media(max-width:720px){
+    .cal .cell{min-height:74px;padding:4px;}
+    .pill{font-size:9.5px;}
+    .calbar .legend{margin-left:0;width:100%;}
+    .hbtns{margin-left:0;width:100%;}
+  }
 </style>
 </head>
 <body>
@@ -92,27 +145,57 @@
   <header class="top">
     <h1>撮影進行ダッシュボード</h1>
     <span class="today" id="today"></span>
-    <div class="actions">
-      <button class="btn" id="reload">↻ 最新に更新</button>
-      <a class="btn" id="editlink" target="_blank">✎ スプレッドを編集</a>
+    <div class="hbtns">
+      <button class="hbtn" id="reload">↻ 最新に更新</button>
+      <a class="hbtn" id="sheetLink" target="_blank" rel="noopener">✎ スプレッドを編集</a>
     </div>
   </header>
   <div class="sub">「完了した工程」列で実績を管理し、予定日を過ぎても未完了の工程がある撮影を<b style="color:var(--late)">遅れ</b>として表示します。反映は「最新に更新」で。</div>
-  <div class="summary" id="summary"></div>
-  <div class="controls">
-    <input type="search" id="q" placeholder="🔍 企画・場所で検索…">
-    <div class="seg" id="sortSeg">
-      <button data-sort="status" class="on">ステータス順</button>
-      <button data-sort="date">撮影日順</button>
-    </div>
-    <span class="count" id="count"></span>
+
+  <div class="viewtabs" id="viewTabs">
+    <button data-view="board" class="on">進行カード</button>
+    <button data-view="cal">公開カレンダー</button>
   </div>
-  <div class="board" id="grid"><div class="loading"><span class="spin"></span>スプレッドを読み込み中…</div></div>
+
+  <!-- ===== 進行カードビュー ===== -->
+  <div id="viewBoard">
+    <div class="summary" id="summary"></div>
+    <div class="controls">
+      <input type="search" id="q" placeholder="🔍 企画・場所で検索…">
+      <div class="seg" id="sortSeg">
+        <button data-sort="status" class="on">ステータス順</button>
+        <button data-sort="date">撮影日順</button>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="board" id="grid"><div class="loading"><span class="spin"></span>スプレッドを読み込み中…</div></div>
+  </div>
+
+  <!-- ===== 公開カレンダービュー ===== -->
+  <div id="viewCal" hidden>
+    <div class="calbar">
+      <button class="navbtn" id="calPrev" title="前の月">&lsaquo;</button>
+      <div class="ym" id="calYM">—</div>
+      <button class="navbtn" id="calNext" title="次の月">&rsaquo;</button>
+      <button class="tdbtn" id="calToday">今月</button>
+      <div class="legend">
+        <span><i style="background:#4c6ef5"></i>本編アップロード</span>
+        <span><i style="background:#10b981"></i>ショートUP</span>
+        <span style="opacity:.55">薄い表示＝公開済み</span>
+      </div>
+    </div>
+    <div class="cal" id="calGrid"></div>
+    <div class="callist" id="calList"></div>
+  </div>
 </div>
 
 <script>
-const SHEET_ID = "1jQRfE8cYZOhEg2Firx90GPWn0An6kok_WLc7mMmpO-Y";
-document.getElementById("editlink").href = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
+var SHEET_ID = "1jQRfE8cYZOhEg2Firx90GPWn0An6kok_WLc7mMmpO-Y";
+var SHEET_GID = "1866005728"; /* 撮影進行の1枚目タブ */
+var SHEET_URL = "https://docs.google.com/spreadsheets/d/" + SHEET_ID + "/edit";
+var CSV_BASE  = "https://docs.google.com/spreadsheets/d/" + SHEET_ID + "/gviz/tq";
+document.getElementById("sheetLink").href = SHEET_URL;
+
 const PHASES = {
   planning:{label:"企画中",color:"var(--planning)",raw:"#f59e0b"},
   shootprep:{label:"撮影準備中",color:"var(--shootprep)",raw:"#ef4444"},
@@ -141,6 +224,8 @@ const MILESTONES=[
   {key:"アップロード",short:"アップロード",bucket:"done"},
   {key:"ショートアップ完了",short:"ショートUP",bucket:"done",alt:["ショートUP","ショートアップ"]}
 ];
+const UP_IDX=MILESTONES.findIndex(m=>m.key==="アップロード");
+const SHORT_IDX=MILESTONES.findIndex(m=>m.key==="ショートアップ完了");
 const today=new Date();today.setHours(0,0,0,0);
 document.getElementById("today").textContent="本日 "+today.toLocaleDateString("ja-JP",{year:"numeric",month:"long",day:"numeric",weekday:"short"});
 
@@ -160,6 +245,7 @@ function parseAnyDate(s,ref){
 function fmt(d){return d?(d.getMonth()+1)+"/"+d.getDate()+"("+"日月火水木金土"[d.getDay()]+")":"—";}
 function shortDate(d){return d?(d.getMonth()+1)+"/"+d.getDate():"—";}
 function daysBetween(a,b){return Math.round((a-b)/86400000);}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function completedIndex(v){
   v=(v||"").trim(); if(!v||v==="なし"||v==="未着手"||v==="ー"||v==="-")return -1;
   for(let i=0;i<MILESTONES.length;i++){const m=MILESTONES[i];
@@ -178,19 +264,21 @@ function shootInfo(s){
   return {md,done,phase,overdue,firstOverdue,delayed:overdue.length>0,shootD:parseAnyDate(s.dates["撮影"]||"",ref)};
 }
 function timelineHTML(info){
-  const ov=new Set(info.overdue);
+  const overdueSet=new Set(info.overdue);
   return MILESTONES.map((m,i)=>{
     let cls="future";
     if(i<=info.done)cls="done";
-    else if(ov.has(i))cls="overdue";
+    else if(overdueSet.has(i))cls="overdue";
     else if(i===info.done+1)cls="current";
     return `<div class="step ${cls}" title="${m.key}"><span class="mk"></span>
       <div class="lbl">${m.short}</div><div class="dt">${shortDate(info.md[i])}</div></div>`;
   }).join("");
 }
 function countdownText(info){
-  if(info.delayed){const i=info.firstOverdue;const dd=daysBetween(today,info.md[i]);
-    return {late:true, html:`⚠ ${MILESTONES[i].short}<br>${dd}日 遅れ`};}
+  if(info.delayed){
+    const i=info.firstOverdue; const dd=daysBetween(today,info.md[i]);
+    return {late:true, html:`⚠ ${MILESTONES[i].short}<br>${dd}日 遅れ`};
+  }
   if(info.done>=MILESTONES.length-1)return {late:false, html:"完了（UP済み）"};
   const nextIdx=info.done+1; const m=MILESTONES[nextIdx]; const d=info.md[nextIdx];
   if(!d)return {late:false, html:`次は「${m.short}」<br>日付未入力`};
@@ -198,10 +286,25 @@ function countdownText(info){
   if(dd===0)return {late:false, html:`本日：${m.short}`};
   return {late:false, html:`${m.short}まで<br>あと${dd}日`};
 }
-function cellVal(c){ if(!c)return""; if(c.f!=null)return String(c.f);
-  let v=c.v; if(v==null)return"";
-  if(typeof v==="string"){const m=v.match(/^Date\((\d+),(\d+),(\d+)/);if(m)return m[1]+"-"+(+m[2]+1)+"-"+m[3];}
-  return String(v); }
+
+let SHOOTS=[],activeFilter=null,sortMode="status";
+let calY=today.getFullYear(), calM=today.getMonth();
+let PUBEV=new Map();
+
+/* ===== CSV（gviz）取得 ===== */
+function parseCSV(t){
+  const rows=[];let row=[],f="",q=false;
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){ if(c==='"'){ if(t[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else{
+      if(c==='"')q=true;
+      else if(c===','){row.push(f);f="";}
+      else if(c==='\n'){row.push(f);f="";rows.push(row);row=[];}
+      else if(c!=='\r')f+=c;
+    }}
+  if(f.length||row.length){row.push(f);rows.push(row);}
+  return rows.map(r=>r.map(c=>String(c).trim()));
+}
 function gridToShoots(grid){
   if(!grid.length)return[];
   let hIdx=grid.findIndex(r=>r.some(c=>c.includes("テーマ"))||r.some(c=>c.trim()==="No."));
@@ -238,33 +341,108 @@ function gridToShoots(grid){
     };
   }).filter(s=>s.theme && s.theme!=="企画／テーマ");
 }
-let SHOOTS=[],activeFilter=null,sortMode="status";
-function load(){
-  const grid=document.getElementById("grid");
-  grid.innerHTML=`<div class="loading"><span class="spin"></span>スプレッドを読み込み中…</div>`;
-  const cb="gvizCb_"+Date.now();
-  let done=false;
-  const timer=setTimeout(()=>{ if(!done){done=true;cleanup();showErr("時間内に応答がありませんでした");} },12000);
-  function cleanup(){ try{delete window[cb];}catch(e){window[cb]=undefined;} if(s&&s.parentNode)s.parentNode.removeChild(s); clearTimeout(timer); }
-  function showErr(msg){ grid.innerHTML=`<div class="errbox">スプレッドを読み込めませんでした。<br>
-    「↻ 最新に更新」で再試行するか、スプレッドが「リンクを知っている全員が閲覧可」かご確認ください。<br><small>${msg||""}</small></div>`; }
-  window[cb]=function(resp){
-    if(done)return; done=true; cleanup();
-    try{
-      const tbl=resp&&resp.table?resp.table:{};
-      const labels=(tbl.cols||[]).map(c=>(c&&c.label!=null)?String(c.label):"");
-      const dataG=(tbl.rows||[]).map(r=>(r.c||[]).map(cellVal));
-      const g=[labels, ...dataG];
-      const parsed=gridToShoots(g);
-      if(!parsed.length)throw new Error("データが空です");
-      SHOOTS=parsed; renderSummary(); render();
-    }catch(e){ showErr((e&&e.message)||e); }
-  };
-  const s=document.createElement("script");
-  s.src=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${cb}&_=${Date.now()}`;
-  s.onerror=()=>{ if(!done){done=true;cleanup();showErr("Failed to load (共有設定をご確認ください)");} };
-  document.head.appendChild(s);
+async function load(){
+  document.getElementById("grid").innerHTML='<div class="loading"><span class="spin"></span>スプレッドを読み込み中…</div>';
+  try{
+    const url=CSV_BASE+"?tqx=out%3Acsv&gid="+SHEET_GID+"&cachebust="+Date.now();
+    const res=await fetch(url,{cache:"no-store"});
+    if(!res.ok)throw new Error("HTTP "+res.status);
+    const parsed=gridToShoots(parseCSV(await res.text()));
+    if(!parsed.length)throw new Error("データが空です");
+    SHOOTS=parsed; buildPubEvents(); renderSummary(); render(); renderCal();
+  }catch(e){
+    document.getElementById("grid").innerHTML=`<div class="errbox">データを読み込めませんでした。<br>
+      <small>${esc((e&&e.message)||e)}</small><br>
+      <small>スプレッドの共有設定が「リンクを知っている全員が閲覧可」になっているか確認してください。</small></div>`;
+    document.getElementById("calGrid").innerHTML="";
+    document.getElementById("calList").innerHTML='<div class="none">データを読み込めませんでした。</div>';
+  }
 }
+document.getElementById("reload").onclick=load;
+
+/* ===== 公開カレンダー ===== */
+function dkey(d){return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+function buildPubEvents(){
+  PUBEV=new Map();
+  SHOOTS.forEach(s=>{
+    const info=shootInfo(s);
+    [[UP_IDX,"main"],[SHORT_IDX,"short"]].forEach(pair=>{
+      const i=pair[0], type=pair[1];
+      const d=info.md[i]; if(!d)return;
+      const k=dkey(d);
+      if(!PUBEV.has(k))PUBEV.set(k,[]);
+      PUBEV.get(k).push({type,no:s.no,theme:s.theme,date:d,published:info.done>=i});
+    });
+  });
+  PUBEV.forEach(list=>list.sort((a,b)=>(a.type===b.type?0:(a.type==="main"?-1:1))));
+}
+function renderCal(){
+  const grid=document.getElementById("calGrid");
+  document.getElementById("calYM").textContent=calY+"年"+(calM+1)+"月";
+  const dow=["日","月","火","水","木","金","土"];
+  let html=dow.map((n,i)=>`<div class="dow ${i===0?"sun":i===6?"sat":""}">${n}</div>`).join("");
+  const first=new Date(calY,calM,1); first.setHours(0,0,0,0);
+  const start=addDays(first,-first.getDay());
+  const lastDay=new Date(calY,calM+1,0).getDate();
+  const weeks=Math.ceil((first.getDay()+lastDay)/7);
+  for(let c=0;c<weeks*7;c++){
+    const d=addDays(start,c);
+    const out=d.getMonth()!==calM;
+    const isToday=d.getTime()===today.getTime();
+    const wd=d.getDay();
+    const evs=out?[]:(PUBEV.get(dkey(d))||[]);
+    const pills=evs.map(e=>{
+      const label=(e.type==="main"?"▶ ":"◆ ")+"No."+e.no+" "+e.theme;
+      const tip=(e.type==="main"?"本編アップロード":"ショートUP")+"：No."+e.no+" "+e.theme+(e.published?"（公開済み）":"");
+      return `<span class="pill ${e.type} ${e.published?"pub":""}" title="${esc(tip)}">${esc(label)}</span>`;
+    }).join("");
+    html+=`<div class="cell ${out?"out":""} ${isToday?"today":""} ${wd===0?"sun":wd===6?"sat":""}">
+      <div class="dnum">${d.getDate()}</div>${pills}</div>`;
+  }
+  grid.innerHTML=html;
+  renderCalList();
+}
+function renderCalList(){
+  const box=document.getElementById("calList");
+  const items=[];
+  PUBEV.forEach(list=>list.forEach(e=>{
+    if(e.date.getFullYear()===calY&&e.date.getMonth()===calM)items.push(e);
+  }));
+  items.sort((a,b)=>(a.date-b.date)||(a.type==="main"?-1:1));
+  if(!items.length){
+    box.innerHTML=`<h4>${calY}年${calM+1}月の公開予定</h4><div class="none">この月に公開予定はありません。</div>`;
+    return;
+  }
+  const rows=items.map(e=>{
+    const dd=daysBetween(e.date,today);
+    let st="",cls="st";
+    if(e.published){st="公開済み";cls="st pub";}
+    else if(dd===0)st="本日";
+    else if(dd>0)st="あと"+dd+"日";
+    else st=(-dd)+"日超過";
+    return `<tr><td class="dt">${fmt(e.date)}</td>
+      <td><span class="tag ${e.type}">${e.type==="main"?"本編":"ショート"}</span></td>
+      <td>No.${esc(e.no)}</td><td>${esc(e.theme)}</td>
+      <td class="${cls}">${st}</td></tr>`;
+  }).join("");
+  box.innerHTML=`<h4>${calY}年${calM+1}月の公開予定（${items.length}件）</h4>
+    <table><thead><tr><th>日付</th><th>種別</th><th>No.</th><th>企画／テーマ</th><th>状態</th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
+}
+function shiftMonth(n){const d=new Date(calY,calM+n,1);calY=d.getFullYear();calM=d.getMonth();renderCal();}
+document.getElementById("calPrev").onclick=()=>shiftMonth(-1);
+document.getElementById("calNext").onclick=()=>shiftMonth(1);
+document.getElementById("calToday").onclick=()=>{calY=today.getFullYear();calM=today.getMonth();renderCal();};
+
+function setView(v){
+  document.getElementById("viewBoard").hidden=(v!=="board");
+  document.getElementById("viewCal").hidden=(v!=="cal");
+  document.querySelectorAll("#viewTabs button").forEach(b=>b.classList.toggle("on",b.dataset.view===v));
+  if(v==="cal")renderCal();
+  try{localStorage.setItem("kaeka-shoot-view",v);}catch(e){}
+}
+document.querySelectorAll("#viewTabs button").forEach(b=>b.onclick=()=>setView(b.dataset.view));
+
 function renderSummary(){
   const c={planning:0,shootprep:0,editing:0,done:0}; let late=0;
   SHOOTS.forEach(s=>{const i=shootInfo(s);c[i.phase]++;if(i.delayed)late++;});
@@ -278,14 +456,15 @@ function renderSummary(){
     activeFilter=(activeFilter===p)?null:p;renderSummary();render();});
 }
 function cardHTML(r){const{s,info}=r;const P=PHASES[info.phase];
-  const border=info.delayed?"var(--late)":P.raw; const cd=countdownText(info);
+  const border=info.delayed?"var(--late)":P.raw;
+  const cd=countdownText(info);
   return `<div class="card" style="border-left-color:${border}">
     <div class="c-left"><span class="status-badge" style="background:${P.color}">${P.label}</span>
       ${info.delayed?'<span class="delay-badge">遅れ</span>':''}
-      <div class="no">No.${s.no}</div><div class="date">${fmt(info.shootD)}</div><div class="time">${s.time||""}</div></div>
-    <div class="c-main"><h3>${s.theme}</h3>
-      <div class="meta"><b>場所</b> ${s.place||"—"}${s.performers.length?` ／ <b>演者</b> ${s.performers.join("・")}`:""}${s.len?` ／ <b>尺</b> ${s.len}`:""}</div>
-      ${s.note?`<div class="note">📌 ${s.note}</div>`:""}</div>
+      <div class="no">No.${esc(s.no)}</div><div class="date">${fmt(info.shootD)}</div><div class="time">${esc(s.time||"")}</div></div>
+    <div class="c-main"><h3>${esc(s.theme)}</h3>
+      <div class="meta"><b>場所</b> ${esc(s.place||"—")}${s.performers.length?` ／ <b>演者</b> ${esc(s.performers.join("・"))}`:""}${s.len?` ／ <b>尺</b> ${esc(s.len)}`:""}</div>
+      ${s.note?`<div class="note">📌 ${esc(s.note)}</div>`:""}</div>
     <div class="c-timeline">${timelineHTML(info)}</div>
     <div class="c-cd"><div class="countdown ${cd.late?'late':''}">${cd.html}</div></div></div>`;
 }
@@ -316,10 +495,11 @@ function render(){
   }
 }
 document.getElementById("q").oninput=render;
-document.getElementById("reload").onclick=()=>load();
 document.querySelectorAll("#sortSeg button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("#sortSeg button").forEach(x=>x.classList.remove("on"));
   b.classList.add("on");sortMode=b.dataset.sort;render();});
+
+try{const v=localStorage.getItem("kaeka-shoot-view");if(v==="cal")setView("cal");}catch(e){}
 load();
 </script>
 </body>
