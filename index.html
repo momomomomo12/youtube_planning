@@ -133,6 +133,15 @@
   .callist .none{color:var(--muted);font-size:12.5px;padding:6px 2px;}
   .callist .dt{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600;}
   .foot{margin:20px 2px 6px;color:var(--muted);font-size:11.5px;line-height:1.6;}
+  .step.clickable{cursor:pointer;}
+  .step.clickable .mk{transition:transform .1s ease,box-shadow .1s ease;}
+  .step.clickable:hover .mk{transform:translateX(-50%) scale(1.3);box-shadow:0 0 0 4px var(--accent-soft);}
+  .step.saving .mk{opacity:.4;}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:50;
+    background:#1f2430;color:#fff;font-size:13px;padding:10px 16px;border-radius:10px;max-width:90vw;
+    box-shadow:0 6px 20px rgba(16,24,40,.28);opacity:0;pointer-events:none;transition:opacity .18s ease;}
+  .toast.show{opacity:1;}
+  .toast.err{background:#b42318;}
   @media(max-width:720px){
     .cal .cell{min-height:74px;padding:4px;}
     .pill{font-size:9.5px;}
@@ -189,7 +198,7 @@
     <div class="callist" id="calList"></div>
   </div>
 
-  <div class="foot">ページ版 2026-09-26（工程14：企画初稿→企画決定→撮影日→…→ショートUP）／「↻ 最新に更新」はページごと再読み込みします（ブラウザのキャッシュ回避）</div>
+  <div class="foot">工程の丸をクリックすると、その工程まで完了としてスプレッドに書き戻します。スプレッド側の変更は60秒ごとに自動で取り込みます。<br>ページ版 2026-09-26（工程14：企画初稿→企画決定→撮影日→…→ショートUP）／「↻ 最新に更新」はページごと再読み込みします</div>
 </div>
 
 <script>
@@ -197,6 +206,9 @@ var SHEET_ID = "1jQRfE8cYZOhEg2Firx90GPWn0An6kok_WLc7mMmpO-Y";
 var SHEET_GID = "1866005728"; /* 撮影進行の1枚目タブ */
 var SHEET_URL = "https://docs.google.com/spreadsheets/d/" + SHEET_ID + "/edit";
 var CSV_BASE  = "https://docs.google.com/spreadsheets/d/" + SHEET_ID + "/gviz/tq";
+/* 工程の丸をクリックしたときにスプレッドへ書き戻すApps Scriptの窓口 */
+var API_URL = "https://script.google.com/macros/s/AKfycbzuMe2Mbf3ENUCWKWztjk7EXcE6RcgXUBHYzCjbRdl9N5EqPfWezUedr3V3SNNeELTmwg/exec";
+var AUTO_REFRESH_MS = 60000;
 document.getElementById("sheetLink").href = SHEET_URL;
 
 const PHASES = {
@@ -207,20 +219,20 @@ const PHASES = {
 };
 const PHASE_ORDER=["planning","shootprep","editing","done"];
 const MILESTONES=[
-  {key:"企画初稿",short:"企画初稿",bucket:"planning"},
-  {key:"企画決定",short:"企画決定",bucket:"planning"},
-  {key:"撮影",short:"撮影日",bucket:"shootprep",contains:"撮影"},
-  {key:"データ送付",short:"データ送付",bucket:"editing"},
-  {key:"デザイナー発注",short:"デザ発注",bucket:"editing"},
-  {key:"デザイナー納品",short:"デザ納品",bucket:"editing"},
-  {key:"編集発注",short:"編集発注",bucket:"editing"},
-  {key:"初稿",short:"初稿",bucket:"editing"},
-  {key:"修正指示",short:"修正指示",bucket:"editing"},
-  {key:"再稿",short:"再稿",bucket:"editing"},
-  {key:"修正指示2",short:"修正指示",bucket:"editing",alt:["修正指示"]},
-  {key:"納品",short:"納品",bucket:"editing"},
-  {key:"アップロード",short:"アップロード",bucket:"done"},
-  {key:"ショートアップ完了",short:"ショートUP",bucket:"done",alt:["ショートUP","ショートアップ"]}
+  {key:"企画初稿",short:"企画初稿",bucket:"planning",wr:"企画初稿"},
+  {key:"企画決定",short:"企画決定",bucket:"planning",wr:"企画決定"},
+  {key:"撮影",short:"撮影日",bucket:"shootprep",contains:"撮影",wr:"撮影日"},
+  {key:"データ送付",short:"データ送付",bucket:"editing",wr:"データ送付"},
+  {key:"デザイナー発注",short:"デザ発注",bucket:"editing",wr:"デザイナー発注"},
+  {key:"デザイナー納品",short:"デザ納品",bucket:"editing",wr:"デザイナー納品"},
+  {key:"編集発注",short:"編集発注",bucket:"editing",wr:"編集発注"},
+  {key:"初稿",short:"初稿",bucket:"editing",wr:"初稿"},
+  {key:"修正指示",short:"修正指示",bucket:"editing",wr:"修正指示"},
+  {key:"再稿",short:"再稿",bucket:"editing",wr:"再稿"},
+  {key:"修正指示2",short:"修正指示",bucket:"editing",alt:["修正指示（2回目）","修正指示2","修正指示②"],wr:"修正指示（2回目）"},
+  {key:"納品",short:"納品",bucket:"editing",wr:"納品"},
+  {key:"アップロード",short:"アップロード",bucket:"done",wr:"アップロード"},
+  {key:"ショートアップ完了",short:"ショートUP",bucket:"done",alt:["ショートUP","ショートアップ"],wr:"ショートUP"}
 ];
 const UP_IDX=MILESTONES.findIndex(m=>m.key==="アップロード");
 const SHORT_IDX=MILESTONES.findIndex(m=>m.key==="ショートアップ完了");
@@ -268,7 +280,8 @@ function timelineHTML(info){
     if(i<=info.done)cls="done";
     else if(overdueSet.has(i))cls="overdue";
     else if(i===info.done+1)cls="current";
-    return `<div class="step ${cls}" title="${m.key}"><span class="mk"></span>
+    const tip = API_URL ? m.short+"まで完了にする" : m.key;
+    return `<div class="step ${cls}${API_URL?" clickable":""}" data-idx="${i}" title="${tip}"><span class="mk"></span>
       <div class="lbl">${m.short}</div><div class="dt">${shortDate(info.md[i])}</div></div>`;
   }).join("");
 }
@@ -329,9 +342,10 @@ function gridToShoots(grid){
     return i;
   });
   const g=(r,i)=>(i>=0&&r[i]!=null)?String(r[i]).trim():"";
-  return grid.slice(hIdx+1).map(r=>{
+  return grid.slice(hIdx+1).map((r,k0)=>{
     const dates={}; MILESTONES.forEach((m,k)=>{dates[m.key]=g(r,msCol[k]);});
     return {
+      sheetRow:hIdx+k0+2,
       no:g(r,col.no),theme:g(r,col.theme),
       performers:g(r,col.perf).split("・").map(x=>x.trim()).filter(Boolean),
       place:g(r,col.place),time:g(r,col.time),len:g(r,col.len),note:g(r,col.note),
@@ -456,7 +470,7 @@ function renderSummary(){
 function cardHTML(r){const{s,info}=r;const P=PHASES[info.phase];
   const border=info.delayed?"var(--late)":P.raw;
   const cd=countdownText(info);
-  return `<div class="card" style="border-left-color:${border}">
+  return `<div class="card" data-row="${s.sheetRow}" data-no="${esc(s.no)}" data-theme="${esc(s.theme)}" style="border-left-color:${border}">
     <div class="c-left"><span class="status-badge" style="background:${P.color}">${P.label}</span>
       ${info.delayed?'<span class="delay-badge">遅れ</span>':''}
       <div class="no">No.${esc(s.no)}</div><div class="date">${fmt(info.shootD)}</div><div class="time">${esc(s.time||"")}</div></div>
@@ -496,6 +510,54 @@ document.getElementById("q").oninput=render;
 document.querySelectorAll("#sortSeg button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("#sortSeg button").forEach(x=>x.classList.remove("on"));
   b.classList.add("on");sortMode=b.dataset.sort;render();});
+
+/* ===== 画面下の通知 ===== */
+let toastT=null;
+function toast(msg,isErr){
+  let el=document.querySelector(".toast");
+  if(!el){el=document.createElement("div");el.className="toast";document.body.appendChild(el);}
+  el.textContent=msg;
+  el.className="toast show"+(isErr?" err":"");
+  clearTimeout(toastT);
+  toastT=setTimeout(function(){el.className="toast"+(isErr?" err":"");},isErr?6000:2600);
+}
+
+/* ===== 工程の丸をクリック → その工程まで完了にしてスプレッドへ書き戻す ===== */
+let writing=false;
+document.getElementById("grid").addEventListener("click",async function(ev){
+  if(!API_URL||writing)return;
+  const step=ev.target.closest(".step.clickable"); if(!step)return;
+  const card=step.closest(".card"); if(!card)return;
+  const idx=parseInt(step.dataset.idx,10);
+  const row=parseInt(card.dataset.row,10);
+  const no=card.dataset.no, theme=card.dataset.theme;
+  const s=SHOOTS.find(function(x){return x.sheetRow===row;});
+  if(!s){toast("対象の行が見つかりません。「最新に更新」してからやり直してください",true);return;}
+  const prev=s.completed, stage=MILESTONES[idx].wr;
+  writing=true; step.classList.add("saving");
+  s.completed=MILESTONES[idx].key;
+  buildPubEvents(); renderSummary(); render(); renderCal();
+  try{
+    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({row:row,no:no,theme:theme,stage:stage})});
+    const out=await res.json();
+    if(!out.ok)throw new Error(out.error||"書き戻しに失敗しました");
+    toast("No."+no+" を「"+MILESTONES[idx].short+"」まで完了にしました");
+  }catch(err){
+    s.completed=prev;
+    buildPubEvents(); renderSummary(); render(); renderCal();
+    toast("スプレッドに書き戻せませんでした："+((err&&err.message)||err),true);
+  }finally{ writing=false; }
+});
+
+/* ===== 自動更新：他の人がスプレッドを直した分を取り込む ===== */
+setInterval(function(){
+  if(document.visibilityState!=="visible"||writing)return;
+  load();
+},AUTO_REFRESH_MS);
+document.addEventListener("visibilitychange",function(){
+  if(document.visibilityState==="visible"&&!writing)load();
+});
 
 try{const v=localStorage.getItem("kaeka-shoot-view");if(v==="cal")setView("cal");}catch(e){}
 load();
